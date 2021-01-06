@@ -1,0 +1,163 @@
+{
+  "log": {
+    "loglevel": "warning"
+  },
+  "inbounds": [
+    {
+      "port": 443,
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID",
+            "flow": "xtls-rprx-direct",
+            "level": 0,
+            "email": "EMAIL"
+          }
+        ],
+        "decryption": "none",
+        "fallbacks": [
+          {
+            "dest": 7112,
+            "xver": 1
+          },
+          {
+            "path": "/WEBSOCKET",
+            "dest": 7123,
+            "xver": 1
+          },
+          {
+            "path": "/VMESSTCP",
+            "dest": 7134,
+            "xver": 1
+          },
+          {
+            "path": "/VMESSWS",
+            "dest": 7145,
+            "xver": 1
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "xtls",
+        "xtlsSettings": {
+          "alpn": [
+            "http/1.1"
+          ],
+          "certificates": [
+            {
+              "certificateFile": "CRT_FILE",
+              "keyFile": "KEY_FILE"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "port": 7112,
+      "listen": "127.0.0.1",
+      "protocol": "trojan",
+      "settings": {
+        "clients": [
+          {
+            "password": "TROJAN_PASSWORD",
+            "level": 0,
+            "email": "EMAIL"
+          }
+        ],
+        "fallbacks": [
+          {
+            "dest": 80
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "acceptProxyProtocol": true
+        }
+      }
+    },
+    {
+      "port": 7123,
+      "listen": "127.0.0.1",
+      "protocol": "vless",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID",
+            "level": 0,
+            "email": "EMAIL"
+          }
+        ],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/WEBSOCKET"
+        }
+      }
+    },
+    {
+      "port": 7134,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID",
+            "level": 0,
+            "email": "EMAIL"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "none",
+        "tcpSettings": {
+          "acceptProxyProtocol": true,
+          "header": {
+            "type": "http",
+            "request": {
+              "path": [
+                "/VMESSTCP"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "port": 7145,
+      "listen": "127.0.0.1",
+      "protocol": "vmess",
+      "settings": {
+        "clients": [
+          {
+            "id": "UUID",
+            "level": 0,
+            "email": "EMAIL"
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "none",
+        "wsSettings": {
+          "acceptProxyProtocol": true,
+          "path": "/VMESSWS"
+        }
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "freedom"
+    }
+  ]
+}
